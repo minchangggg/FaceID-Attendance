@@ -1,6 +1,8 @@
 <img width="1919" height="660" alt="image" src="https://github.com/user-attachments/assets/0f640a3c-2e00-482b-bb99-9a280605e282" />
 
-# [How to run] ________________________________________
+---------------------
+
+# ___ [How to run] ___
 
 ## 1. Check localhost IP (in cmd)
 ```
@@ -13,7 +15,9 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ## 3. Take picture at web server to recognize
 
-# [Demo] ______________________________________________
+---------------------
+
+# ______ [Demo] ______
 
 ## Step 1. Enroll
 <img width="1372" height="734" alt="image" src="https://github.com/user-attachments/assets/ac0c6916-60d7-43be-bcf9-5954c9d04afa" />
