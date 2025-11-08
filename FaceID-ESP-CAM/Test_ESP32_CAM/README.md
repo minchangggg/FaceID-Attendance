@@ -14,8 +14,8 @@
 #include "camera_pins.h"
 
 // Enter your WiFi credentials
-const char *ssid = "Minh Trang";
-const char *password = "31122003";
+const char *ssid = "hehe123";
+const char *password = "minchan123";
 
 void startCameraServer();
 void setupLedFlash(int pin);
