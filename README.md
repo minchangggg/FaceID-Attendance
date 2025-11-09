@@ -1,7 +1,7 @@
-# Face ID Attend
+# [Face ID Attend]()
 <img width="1919" height="487" alt="image" src="https://github.com/user-attachments/assets/81c4da88-6e1d-4153-80a3-a12b5527b093" />
 
-## 1. What it does
+## [1. What it does]()
 - **Face ID Attend** is an IoT-based, contact-free attendance system with face recognition.
   - Real-time face detection & recognition
   - Touchless **Check-In / Check-Out** with timestamps
@@ -9,7 +9,7 @@
 
 -------------------------
 
-## 2. Approaches
+## [2. Approaches]()
 
 ### 2.1. `Approach 1: On-device (ESP32-CAM + ESP-WHO)`
 > Folder Code: **FaceID-On-Device**
@@ -50,7 +50,7 @@
 
 -------------------------
 
-## 3. Execution Flow
+## [3. Execution Flow for Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)]()
 
 ### 3.1. Overview
 FaceID operates in two main phases: **Enrollment** and **Recognition & Attendance**.
@@ -68,7 +68,7 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
    - Else → mark as **unknown** (optional: save for later review).
 4. **Log Event:** Write the attendance record and update **`PeopleCount`**.
 
-### 3.2. System Architecture & Data Flow (Approach 2)
+### 3.2. System Architecture & Data Flow 
 *(Edge-Server: ESP32-CAM → Server/Laptop)*
 
 - **ESP32-CAM** streams frames (MJPEG/RTSP/HTTP) → **FastAPI Server**.
