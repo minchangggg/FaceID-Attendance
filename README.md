@@ -1,4 +1,4 @@
-# [___ Face ID Attend ___]()
+# [[Face ID Attend]]()
 <img width="1919" height="487" alt="image" src="https://github.com/user-attachments/assets/81c4da88-6e1d-4153-80a3-a12b5527b093" />
 
 ## [1. What it does]()
