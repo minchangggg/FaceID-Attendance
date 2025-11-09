@@ -12,7 +12,7 @@
 ## 2. Approaches
 
 ### 2.1. `Approach 1: On-device (ESP32-CAM + ESP-WHO)`
-> Folder Code: **FaceID-ESP-CAM**
+> Folder Code: **FaceID-On-Device**
 - Detection & recognition run entirely on the ESP32-CAM.
 - Lowest cost; no network required after enrollment.
 - Best for small classrooms/kiosks with 1–2 faces in frame.
