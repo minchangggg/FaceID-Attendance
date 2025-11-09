@@ -55,12 +55,12 @@
 ### 3.1. Overview
 FaceID operates in two main phases: **Enrollment** and **Recognition & Attendance**.
 
-**Phase 1 — Enrollment**
+**Phase 1 - Enrollment**
 1. **Capture:** Client captures face images (ESP32-CAM or Pi Camera).
 2. **Process:** `detect → align → embed` → produce embedding vector **`d`**.
 3. **Store:** Save `{person_id, name, d, meta}` to the face database (DB).
 
-**Phase 2 — Recognition & Attendance**
+**Phase 2 - Recognition & Attendance**
 1. **Frame Capture:** Take a frame from the camera stream.
 2. **Per Face:** `detect → align → embed` to get query vector **`q`**.
 3. **Match:** Compare **`q`** to stored embeddings (e.g., cosine similarity).  
