@@ -1,106 +1,199 @@
-# Classroom Management System - Modern React App
+# FaceID Attendance System - React Frontend
 
-A modern, responsive classroom management system built with React, TypeScript, and Vite. This application monitors temperature, tracks occupancy, and controls classroom devices (lights and fans).
+A modern, responsive web application for viewing and managing FaceID attendance records.
 
-## ✨ Features
+## Features
 
-- **Real-time Monitoring**: Track temperature and occupancy in real-time
-- **Device Control**: Toggle lights and fans remotely
-- **Data Visualization**: Beautiful charts using Recharts
-- **Historical Data**: Filter and view historical sensor data
-- **Auto-refresh**: Automatic data updates every 30 seconds
-- **Dark Mode**: Full dark mode support
-- **Responsive Design**: Works perfectly on mobile, tablet, and desktop
-- **Modern UI**: Built with Tailwind CSS and custom components
+- **Real-time Attendance Viewing**: View student attendance logs with automatic refresh every 30 seconds
+- **Date Filtering**: Filter attendance records by specific date
+- **Search Functionality**: Search students by name or student ID
+- **Statistics Dashboard**: View total students, check-ins, and system status
+- **Dark Mode Support**: Toggle between light and dark themes
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 
-## 🚀 Tech Stack
+## Tech Stack
 
-- **React 18** - Modern React with hooks
-- **TypeScript** - Type-safe code
-- **Vite** - Lightning-fast build tool
-- **Tailwind CSS** - Utility-first CSS framework
-- **TanStack Query** - Powerful data fetching and caching
-- **Recharts** - Composable charting library
-- **Lucide React** - Beautiful icon library
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **TanStack Query** - Data fetching and caching
+- **Tailwind CSS** - Styling
 - **Axios** - HTTP client
+- **Lucide React** - Icon library
 
-## 📦 Installation
+## Prerequisites
 
-1. Install dependencies:
+- Node.js 16+ and npm/yarn
+- FaceID FastAPI server running on `http://localhost:8000`
+
+## Installation
+
+1. Navigate to the reactapp directory:
+
+```bash
+cd reactapp
+```
+
+2. Install dependencies:
+
 ```bash
 npm install
 ```
 
-2. Start the development server:
+## Running the Application
+
+### Development Mode
+
 ```bash
 npm run dev
 ```
 
-3. Open your browser to `http://localhost:3000`
+The app will be available at `http://localhost:5173`
 
-## 🛠️ Available Scripts
+### Production Build
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Lint code
-
-## 🔧 Configuration
-
-The API endpoint is configured in `src/services/api.ts`. Update the `API_BASE_URL` to match your backend:
-
-```typescript
-const API_BASE_URL = 'http://127.0.0.1/pbl31/tdt';
+```bash
+npm run build
 ```
 
-## 📱 Features Overview
+The built files will be in the `dist` directory.
 
-### Dashboard Cards
-- **Temperature Card**: Displays current temperature with update time
-- **Occupancy Card**: Shows number of people in the room
-- **Light Control**: Toggle classroom lights with visual feedback
-- **Fan Control**: Control fan with spinning animation when active
+### Preview Production Build
 
-### Data Filtering
-- Filter historical data by date range
-- Toggle auto-refresh on/off
-- Visual indicators for active state
+```bash
+npm run preview
+```
 
-### Charts & Tables
-- Line chart showing temperature and occupancy over time
-- Sortable data table with device status
-- Color-coded status indicators
+## Project Structure
+
+```
+reactapp/
+├── src/
+│   ├── components/
+│   │   ├── ui/              # Reusable UI components
+│   │   │   ├── Button.tsx
+│   │   │   ├── Card.tsx
+│   │   │   └── Input.tsx
+│   │   ├── FilterSection.tsx    # Date and search filters
+│   │   ├── StudentList.tsx      # Student attendance table
+│   │   └── ThemeToggle.tsx      # Dark mode toggle
+│   ├── services/
+│   │   └── api.ts           # API service layer
+│   ├── types/
+│   │   └── api.ts           # TypeScript type definitions
+│   ├── lib/
+│   │   └── utils.ts         # Utility functions
+│   ├── App.tsx              # Main application component
+│   ├── main.tsx             # Application entry point
+│   └── index.css            # Global styles
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── tailwind.config.js
+```
+
+## API Integration
+
+The application connects to the FastAPI backend at `http://localhost:8000` and uses the following endpoint:
+
+- `GET /view-logs/` - Fetch all attendance logs
+- `GET /view-logs/?date=YYYY-MM-DD` - Fetch attendance logs for a specific date
+
+### Response Format
+
+**All logs (no date parameter):**
+```json
+{
+  "date": null,
+  "records": [
+    {
+      "id": 1,
+      "name": "Nguyen Van A",
+      "student_id": "SV001",
+      "timestamp": "2024-11-10T08:30:00"
+    },
+    {
+      "id": 2,
+      "name": "Tran Thi B",
+      "student_id": "SV002",
+      "timestamp": "2024-11-09T09:15:00"
+    }
+  ]
+}
+```
+
+**Specific date:**
+```json
+{
+  "date": "2024-11-10",
+  "records": [
+    {
+      "id": 1,
+      "name": "Nguyen Van A",
+      "student_id": "SV001",
+      "timestamp": "2024-11-10T08:30:00"
+    }
+  ]
+}
+```
+
+## Configuration
+
+To change the API base URL, edit `src/services/api.ts`:
+
+```typescript
+const API_BASE_URL = 'http://localhost:8000';
+```
+
+## Features in Detail
+
+### Date Filtering
+- Leave date empty to view **all attendance records** from all dates
+- Select any date to view attendance records for that specific day
+- Click "Hôm nay" (Today) button for quick access to today's records
+- Click the "X" button to clear the date filter and view all records
+
+### Search
+- Search by student name or student ID
+- Real-time filtering as you type
+- Case-insensitive search
+
+### Statistics
+- **Tổng sinh viên**: Total unique students who checked in
+- **Lượt điểm danh**: Total check-in count
+- **Trạng thái**: System status indicator
 
 ### Dark Mode
 - Toggle between light and dark themes
-- Smooth transitions
-- Persists across sessions
+- Preference persists during session
+- Smooth transitions between themes
 
-## 🎨 Design Features
+## Development
 
-- Modern gradient backgrounds
-- Smooth animations and transitions
-- Hover effects and interactive elements
-- Responsive grid layouts
-- Custom color schemes for light/dark modes
-- Accessible UI components
+### Code Style
+- Use meaningful variable names
+- Keep functions under 30 lines
+- Add type annotations for all props and functions
+- Follow React best practices
 
-## 🌐 Browser Support
+### Adding New Features
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+1. Create new components in `src/components/`
+2. Add API functions in `src/services/api.ts`
+3. Define types in `src/types/api.ts`
+4. Update this README with new features
 
-## 📄 License
+## Troubleshooting
 
-MIT License - feel free to use this project for learning and development.
+### API Connection Issues
+- Ensure FastAPI server is running on `http://localhost:8000`
+- Check CORS settings in the FastAPI server
+- Verify network connectivity
 
-## 🤝 Contributing
+### Build Issues
+- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+- Clear Vite cache: `rm -rf node_modules/.vite`
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## License
 
-## 📧 Support
-
-For support, please open an issue in the repository.
-
+MIT License - See main project README for details

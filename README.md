@@ -80,4 +80,72 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
 
 <img width="3953" height="1586" alt="faceID" src="https://github.com/user-attachments/assets/b4ecfdf5-b6a9-43c7-8e7d-e273c98dc0ca" />
 
+-------------------------
+
+## [4. Getting Started]()
+
+### 4.1. Running the FastAPI Server
+
+The FaceID server is a FastAPI application that handles face detection, recognition, and attendance logging.
+
+**Prerequisites:**
+- Python 3.11+
+- Required packages: fastapi, uvicorn, deepface, ultralytics, opencv-python, pillow, numpy, python-dotenv
+
+**Installation:**
+
+```bash
+cd FaceID-Server
+pip install fastapi uvicorn python-dotenv pillow numpy ultralytics deepface opencv-python requests
+```
+
+**Running the server:**
+
+```bash
+cd FaceID-Server
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The server will be available at `http://localhost:8000`
+
+**API Endpoints:**
+- `POST /add-face/` - Register a new face with name and student_id
+- `POST /verify-face/` - Verify a face against registered faces
+- `POST /detect-human/` - Detect if there's a human in the image
+- `GET /view-logs/` - View all verification logs (from all dates, sorted by timestamp)
+- `GET /view-logs/?date=YYYY-MM-DD` - View verification logs for a specific date
+
+### 4.2. Running the React Frontend
+
+The React app provides a modern interface for viewing attendance records with search and filtering capabilities.
+
+**Prerequisites:**
+- Node.js 16+
+- FastAPI server running on `http://localhost:8000`
+
+**Installation:**
+
+```bash
+cd reactapp
+npm install
+```
+
+**Running the app:**
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+**Features:**
+- View all attendance logs in real-time (auto-refresh every 30s)
+- Filter by specific date or view all dates
+- Search by student name or ID
+- Statistics dashboard (total students, check-ins)
+- Dark mode support
+- Responsive design
+
+For detailed documentation, see [reactapp/README.md](reactapp/README.md)
+
 

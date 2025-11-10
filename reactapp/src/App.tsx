@@ -1,21 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Building2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { UserCheck } from 'lucide-react';
 import { ThemeToggle } from './components/ThemeToggle';
-import { StatCards } from './components/StatCards';
 import { FilterSection } from './components/FilterSection';
-import { DataChart } from './components/DataChart';
-import { DataTable } from './components/DataTable';
-import { getCurrentData, getFilteredData, controlDevice } from './services/api';
-import type { SensorData, ControlPayload } from './types/api';
+import { StudentList } from './components/StudentList';
+import { getAttendanceLogs } from './services/api';
+import type { AttendanceLog } from './types/api';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
-  const [autoUpdate, setAutoUpdate] = useState(true);
-  const [filteredData, setFilteredData] = useState<SensorData[]>([]);
-  const queryClient = useQueryClient();
+  const [selectedDate, setSelectedDate] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Toggle dark mode
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -24,112 +20,56 @@ function App() {
     }
   }, [isDark]);
 
-  // Fetch current data
-  const { data: currentData, isLoading } = useQuery({
-    queryKey: ['currentData'],
-    queryFn: getCurrentData,
-    refetchInterval: autoUpdate ? 30000 : false, // 30 seconds
+  const { data: attendanceLogs = [], isLoading } = useQuery({
+    queryKey: ['attendanceLogs', selectedDate],
+    queryFn: () => getAttendanceLogs(selectedDate ? { date: selectedDate } : undefined),
+    refetchInterval: 30000,
     retry: 2,
   });
 
-  // Control device mutation
-  const controlMutation = useMutation({
-    mutationFn: controlDevice,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentData'] });
-    },
-  });
-
-  const handleToggleFan = () => {
-    if (!currentData) return;
+  const filteredLogs = useMemo(() => {
+    if (!searchTerm) return attendanceLogs;
     
-    const payload: ControlPayload = {
-      temperature: currentData.temperature,
-      number_people: currentData.number_people,
-      fan_status: currentData.fan_status === 1 ? 0 : 1,
-      light_status: currentData.light_status,
-    };
-    
-    controlMutation.mutate(payload);
-  };
-
-  const handleToggleLight = () => {
-    if (!currentData) return;
-    
-    const payload: ControlPayload = {
-      temperature: currentData.temperature,
-      number_people: currentData.number_people,
-      fan_status: currentData.fan_status,
-      light_status: currentData.light_status === 1 ? 0 : 1,
-    };
-    
-    controlMutation.mutate(payload);
-  };
-
-  const handleFilter = async (startDate: string, endDate: string) => {
-    try {
-      const data = await getFilteredData({
-        start_time: startDate,
-        end_time: endDate,
-      });
-      setFilteredData(data);
-    } catch (error) {
-      console.error('Error filtering data:', error);
-    }
-  };
-
-  const displayData = filteredData.length > 0 ? filteredData : currentData ? [currentData] : [];
+    const term = searchTerm.toLowerCase();
+    return attendanceLogs.filter((log: AttendanceLog) => 
+      log.name.toLowerCase().includes(term) || 
+      log.student_id.toLowerCase().includes(term)
+    );
+  }, [attendanceLogs, searchTerm]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
-      {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Building2 className="h-6 w-6" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+              <UserCheck className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Hệ Thống Quản Lý Phòng Học</h1>
-              <p className="text-xs text-muted-foreground">Classroom Management System</p>
+              <h1 className="text-xl font-bold">Hệ Thống Điểm Danh FaceID</h1>
+              <p className="text-xs text-muted-foreground">FaceID Attendance System</p>
             </div>
           </div>
           <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-6">
-        {/* Current Status Cards */}
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Thông tin hiện tại</h2>
-          <StatCards
-            data={currentData || null}
-            onToggleFan={handleToggleFan}
-            onToggleLight={handleToggleLight}
-            isLoading={isLoading || controlMutation.isPending}
+          <h2 className="text-2xl font-semibold mb-4">Danh sách điểm danh</h2>
+          <FilterSection
+            onDateChange={setSelectedDate}
+            onSearchChange={setSearchTerm}
+            isLoading={isLoading}
           />
         </section>
 
-        {/* Filter Section */}
-        <FilterSection
-          onFilter={handleFilter}
-          autoUpdate={autoUpdate}
-          onToggleAutoUpdate={() => setAutoUpdate(!autoUpdate)}
-          isLoading={isLoading}
-        />
-
-        {/* Charts and Table */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataChart data={displayData} />
-          <DataTable data={displayData} />
-        </div>
+        <StudentList data={filteredLogs} isLoading={isLoading} />
       </main>
 
-      {/* Footer */}
       <footer className="border-t mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          <p>© 2024 Classroom Management System. Built with React + TypeScript + Vite</p>
+          <p>© 2024 FaceID Attendance System. Built with React + TypeScript + Vite</p>
         </div>
       </footer>
     </div>

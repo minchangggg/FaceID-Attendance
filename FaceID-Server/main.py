@@ -207,15 +207,33 @@ def view_logs(date: str = None):
     import glob
     import csv
     import os
-    if date is None:
-        # Default to today
-        date = datetime.datetime.now().strftime('%Y-%m-%d')
-    csv_filename = os.path.join('verification_logs', f'verification_logs_{date}.csv')
-    if not os.path.exists(csv_filename):
-        return JSONResponse(content={"error": "Log file not found for this date."}, status_code=404)
+    
     records = []
-    with open(csv_filename, newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            records.append(row)
-    return {"date": date, "records": records}
+    
+    if date is None:
+        log_files = glob.glob(os.path.join('verification_logs', 'verification_logs_*.csv'))
+        
+        if not log_files:
+            return JSONResponse(content={"date": None, "records": []})
+        
+        for csv_filename in log_files:
+            if os.path.exists(csv_filename):
+                with open(csv_filename, newline='', encoding='utf-8') as csvfile:
+                    reader = csv.DictReader(csvfile)
+                    for row in reader:
+                        records.append(row)
+        
+        records.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+        
+        return {"date": None, "records": records}
+    else:
+        csv_filename = os.path.join('verification_logs', f'verification_logs_{date}.csv')
+        if not os.path.exists(csv_filename):
+            return JSONResponse(content={"error": "Log file not found for this date.", "date": date, "records": []}, status_code=404)
+        
+        with open(csv_filename, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                records.append(row)
+        
+        return {"date": date, "records": records}

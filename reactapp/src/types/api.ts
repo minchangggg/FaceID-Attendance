@@ -1,28 +1,23 @@
-// API Types
-export interface SensorData {
-  temperature: number;
-  number_people: number;
-  fan_status: number;
-  light_status: number;
-  update_time: string;
+export interface AttendanceLog {
+  id: number;
+  name: string;
+  student_id: string;
+  timestamp: string;
 }
 
-export interface ApiResponse<T> {
-  status: 'success' | 'error';
-  message?: string;
-  data?: T;
-  details?: string;
+export interface AttendanceResponse {
+  date: string | null;
+  records: AttendanceLog[];
+  error?: string;
 }
 
-export interface ControlPayload {
-  temperature: number;
-  number_people: number;
-  fan_status: number;
-  light_status: number;
+export interface StudentInfo {
+  id: number;
+  name: string;
+  student_id: string;
 }
 
 export interface DateFilter {
-  start_time?: string;
-  end_time?: string;
+  date?: string;
 }
 
