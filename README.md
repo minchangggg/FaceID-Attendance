@@ -15,8 +15,6 @@ An IoT-based, contact-free attendance system using face recognition.
 ## [2. Approaches]()
 
 ### 2.1. `Approach 1: On-device (ESP32-CAM + ESP-WHO)`
-> Ref: https://www.14core.com/esp32-s-cam-in-face-detection-and-recognition-with-esp-who-library/?utm_source=chatgpt.com
-
 - Detection & recognition run entirely on the ESP32-CAM using ESP-WHO.
   > ESP-WHO supports development of face detection and recognition applications based around Espressif Systems' ESP32 chip in the most convenient way. With ESP-WHO, you can easily build up face detection- and recognition-featured applications.
 
@@ -30,6 +28,8 @@ An IoT-based, contact-free attendance system using face recognition.
   + Framework: **ESP-WHO v1.0.0**.
     > https://github.com/espressif/esp-who.git -b v1.0.0
   + Stable 5V supply (≥ 1A recommended). Avoid brownouts during Wi-Fi + camera.
+
+- Reference https://www.14core.com/esp32-s-cam-in-face-detection-and-recognition-with-esp-who-library/?utm_source=chatgpt.com
 
 ### 2.2. `Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)` => Main Approach for this Repository
 - ESP32-CAM streams or sends images to a local server.
