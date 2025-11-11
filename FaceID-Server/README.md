@@ -20,8 +20,6 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 # _____ [Demo] _____
 
 ## Step 1. Enroll
-<img width="1372" height="734" alt="image" src="https://github.com/user-attachments/assets/ac0c6916-60d7-43be-bcf9-5954c9d04afa" />
-
 <img width="1917" height="1019" alt="image" src="https://github.com/user-attachments/assets/f1fd6f6c-a97c-410e-ac38-3d818f67638f" />
 
 ## Step 2. Recognition & Attendance
