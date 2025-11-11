@@ -195,7 +195,6 @@ Folder `ESP32Cam-CameraWebServer` contains the ESP32-CAM firmware, based on the 
   * `POST /verify-face/` (recognition)
     handled by the **FaceID-Server** backend.
 
-```
 
 
 
