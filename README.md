@@ -23,8 +23,10 @@ An IoT-based, contact-free attendance system using face recognition.
 
 - Requirements
   + Board: ESP32-CAM (AI-Thinker or equivalent).
-  + Toolchain: **ESP-IDF 4.4.7** with idf.py. https://dl.espressif.com/dl/esp-idf/?idf=4.4
-  + Framework: **ESP-WHO v1.0.0**. https://github.com/espressif/esp-who.git -b v1.0.0
+  + Toolchain: **ESP-IDF 4.4.7** with idf.py.
+    > https://dl.espressif.com/dl/esp-idf/?idf=4.4
+  + Framework: **ESP-WHO v1.0.0**.
+    > https://github.com/espressif/esp-who.git -b v1.0.0
   + Stable 5V supply (≥ 1A recommended). Avoid brownouts during Wi-Fi + camera.
 
 - Reference https://www.14core.com/esp32-s-cam-in-face-detection-and-recognition-with-esp-who-library/?utm_source=chatgpt.com
