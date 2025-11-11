@@ -32,10 +32,6 @@ An IoT-based, contact-free attendance system using face recognition.
   + Stable 5V supply (≥ 1A recommended). Avoid brownouts during Wi-Fi + camera.
 
 ### 2.2. `Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)` => Main Approach for this Repository
-Folder Backend Code: **FaceID-Server**
-
-Folder Frontend Code: **reactapp**
-
 - ESP32-CAM streams or sends images to a local server.
 - Server handles:
   - Face detection (e.g. YOLOv8)
@@ -118,83 +114,87 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
 
 -------------------------
 
-## [4. Getting Started]()
+## 4. Getting Started
+
+Folder Backend Code: **FaceID-Server**  
+Folder Frontend Code: **reactapp**  
+Folder ESP32-CAM WebServer: **ESP32Cam-CameraWebServer**
 
 ### 4.1. Running the FastAPI Server (BE)
+
 The FaceID server is a FastAPI application that handles face detection, recognition, and attendance logging.
 
 **Prerequisites:**
+
 - Python 3.11+
-- Required packages: fastapi, uvicorn, deepface, ultralytics, opencv-python, pillow, numpy, python-dotenv
+- Packages: `fastapi`, `uvicorn`, `deepface`, `ultralytics`, `opencv-python`, `pillow`, `numpy`, `python-dotenv`, `requests`
 
 **Installation:**
 
 ```bash
 cd FaceID-Server
 pip install fastapi uvicorn python-dotenv pillow numpy ultralytics deepface opencv-python requests
-```
+````
 
-**Running the server:**
+**Run:**
 
 ```bash
 cd FaceID-Server
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The server will be available at `http://localhost:8000`
+Server: `http://localhost:8000`
 
 **API Endpoints:**
-- `POST /add-face/` - Register a new face with name and student_id
-- `POST /verify-face/` - Verify a face against registered faces
-- `POST /detect-human/` - Detect if there's a human in the image
-- `GET /view-logs/` - View all verification logs (from all dates, sorted by timestamp)
-- `GET /view-logs/?date=YYYY-MM-DD` - View verification logs for a specific date
 
-### 4.2. Running the React (FE)
-The React app provides a modern interface for viewing attendance records with search and filtering capabilities.
+* `POST /add-face/` — Register a new face (name, student_id, image)
+* `POST /verify-face/` — Verify a face against registered faces
+* `POST /detect-human/` — Detect if there is a human in the image
+* `GET /view-logs/` — Get all verification logs (all dates)
+* `GET /view-logs/?date=YYYY-MM-DD` — Get logs for a specific date
+
+### 4.2. Running the React App (FE)
+
+The React app provides a web interface for viewing attendance records.
 
 **Prerequisites:**
-- Node.js 16+
-- FastAPI server running on `http://localhost:8000`
 
-**Installation:**
+* Node.js 16+
+* Backend running at `http://localhost:8000`
+
+**Installation & Run:**
 
 ```bash
 cd reactapp
 npm install
-```
-
-**Running the app:**
-
-```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`
+Frontend: `http://localhost:5173`
 
 **Features:**
-- View all attendance logs in real-time (auto-refresh every 30s)
-- Filter by specific date or view all dates
-- Search by student name or ID
-- Statistics dashboard (total students, check-ins)
-- Dark mode support
-- Responsive design
 
-For detailed documentation, see [reactapp/README.md](reactapp/README.md)
+* View attendance logs (auto-refresh)
+* Filter by date
+* Search by student name or ID
+* Basic statistics
+* Dark mode
+* Responsive layout
 
-### 4.3. Capturing Frames from ESP32-CAM WebServer
+For more details, see `reactapp/README.md`.
 
-You can use the standard **ESP32-CAM WebServer** firmware (e.g. Arduino `CameraWebServer` example) as the video source for the FaceID server.
+### 4.3. ESP32-CAM Camera WebServer (Capture Source)
 
-**1. Flash ESP32-CAM WebServer**
+Folder `ESP32Cam-CameraWebServer` contains the ESP32-CAM firmware, based on the classic `CameraWebServer` example.
 
-- Upload the `CameraWebServer` example (or a similar sketch).
-- Note the ESP32-CAM IP, e.g. `http://192.168.1.50`.
+* Preview page: `http://<ESP32_CAM_IP>/`
+* Snapshot endpoint: `http://<ESP32_CAM_IP>/capture` (JPEG frame)
+* The `/capture` URL can be used as the image source for:
 
-**2. Snapshot URL**
+  * `POST /add-face/` (enrollment)
+  * `POST /verify-face/` (recognition)
+    handled by the **FaceID-Server** backend.
 
-The WebServer exposes a capture endpoint (JPEG frame):
+```
 
-```text
-http://<ESP32_CAM_IP>/capture
 
