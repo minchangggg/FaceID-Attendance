@@ -70,9 +70,20 @@ Folder Frontend Code: **reactapp**
 
 -------------------------
 
-## [3. Execution Flow for Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)]()
+## [3. Requirements and Execution Flow (Approach 2 - Edge-Server)]()
+### 3.1 Requirements
+- Board: ESP32-CAM (AI-Thinker or equivalent).
 
-### 3.1. Overview
+  <img width="270" alt="image" src="https://github.com/user-attachments/assets/11721ba0-5ed0-4caf-aa5c-fe7d4cb2508d">
+  <img width="140" alt="image" src="https://github.com/user-attachments/assets/13878d8e-575d-44d9-9d27-af9a1379ff66">
+  <img width="150" alt="image" src="https://github.com/user-attachments/assets/9fb330d6-ecaf-4c63-876b-d1e720a2472b">
+  <img width="147" alt="image" src="https://github.com/user-attachments/assets/cb5ab32f-0c67-4d5a-84ff-2e23b28af88f">
+  
+  <img width="632" height="264" alt="image" src="https://github.com/user-attachments/assets/447ad7ab-b9cb-49cb-ba9a-e12404cb8a8b" />
+
+- Stable 5V supply (≥ 1A recommended). Avoid brownouts during Wi-Fi + camera.
+
+### 3.2. Execution Flow
 FaceID operates in two main phases: **Enrollment** and **Recognition & Attendance**.
 
 **Phase 1 - Enrollment**
@@ -88,15 +99,20 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
      - Else → mark as **Unknown`** (optionally log for review).
   4. Log the attendance event (ID, name, timestamp) to SQLite and CSV.
 
-### 3.2. System Architecture & Data Flow 
+### 3.3. System Architecture & Data Flow 
 *(Edge-Server: ESP32-CAM → Server/Laptop)*
 
-- **ESP32-CAM** streams frames (MJPEG/RTSP/HTTP) → **FastAPI Server**.
-- **Detecting Service**: face detection.
-- **Embedding Service**: generates face embeddings → **`d`** / **`q`** vectors.
-- **SQLite DB**: stores embeddings and metadata; queried on match.
-- **Logging module**: logs events to CSV/JSON and exposes HTTP APIs endpoints.
-- **Web UI (reactapp)** → consumes APIs and displays attendance records
+**ESP32-CAM** streams frames (MJPEG/RTSP/HTTP) → **FastAPI Server**.
+
+**Detecting Service**: face detection.
+
+**Embedding Service**: generates face embeddings → **`d`** / **`q`** vectors.
+
+**SQLite DB**: stores embeddings and metadata; queried on match.
+
+**Logging module**: logs events to CSV/JSON and exposes HTTP APIs endpoints.
+
+**Web UI (reactapp)** → consumes APIs and displays attendance records
 
 <img width="3953" height="1586" alt="faceID" src="https://github.com/user-attachments/assets/b4ecfdf5-b6a9-43c7-8e7d-e273c98dc0ca" />
 
