@@ -92,7 +92,7 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
   2. For each detected face: `detect → (optional) align → embed` → query vector **q**.
   3. Match **q** against stored embeddings (e.g. cosine similarity):
      - If `score ≥ threshold` → return `{name, student_id}`.
-     - Else → mark as **Unknown`** (optionally log for review).
+     - Else → mark as **Unknown** (optionally log for review).
   4. Log the attendance event (ID, name, timestamp) to SQLite and CSV.
 
 ### 3.3. System Architecture & Data Flow 
