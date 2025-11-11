@@ -181,3 +181,20 @@ The app will be available at `http://localhost:5173`
 - Responsive design
 
 For detailed documentation, see [reactapp/README.md](reactapp/README.md)
+
+### 4.3. Capturing Frames from ESP32-CAM WebServer
+
+You can use the standard **ESP32-CAM WebServer** firmware (e.g. Arduino `CameraWebServer` example) as the video source for the FaceID server.
+
+**1. Flash ESP32-CAM WebServer**
+
+- Upload the `CameraWebServer` example (or a similar sketch).
+- Note the ESP32-CAM IP, e.g. `http://192.168.1.50`.
+
+**2. Snapshot URL**
+
+The WebServer exposes a capture endpoint (JPEG frame):
+
+```text
+http://<ESP32_CAM_IP>/capture
+
