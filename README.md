@@ -18,7 +18,7 @@ An IoT-based, contact-free attendance system using face recognition.
 > Ref: https://www.14core.com/esp32-s-cam-in-face-detection-and-recognition-with-esp-who-library/?utm_source=chatgpt.com
 
 - Detection & recognition run entirely on the ESP32-CAM using ESP-WHO.
-  > ESP-WHO is Espressif’s official face detection & recognition framework for ESP32. It provides optimized camera drivers, image processing, and pre-trained lightweight models (face detection, face recognition, face enrollment) that run directly on the ESP32 without an external server. Using ESP-WHO, the ESP32-CAM can capture images, detect faces, compare them with locally stored templates, and make real-time recognition decisions entirely on-device.
+  > ESP-WHO supports development of face detection and recognition applications based around Espressif Systems' ESP32 chip in the most convenient way. With ESP-WHO, you can easily build up face detection- and recognition-featured applications.
 
 - Lowest cost; No external server is required after enrollment.
 - Best for small classrooms/kiosks with 1–2 faces in frame.
