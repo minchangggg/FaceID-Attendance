@@ -114,7 +114,7 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
 
 -------------------------
 
-## 4. Getting Started
+## [4. Getting Started]()
 
 Folder Backend Code: **FaceID-Server**  
 Folder Frontend Code: **reactapp**  
@@ -196,5 +196,7 @@ Folder `ESP32Cam-CameraWebServer` contains the ESP32-CAM firmware, based on the 
     handled by the **FaceID-Server** backend.
 
 ```
+
+
 
 
