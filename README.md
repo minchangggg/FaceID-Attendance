@@ -1,33 +1,53 @@
 # [Face ID Attendance]()
+An IoT-based, contact-free attendance system using face recognition.
+
 <img width="1919" height="487" alt="image" src="https://github.com/user-attachments/assets/81c4da88-6e1d-4153-80a3-a12b5527b093" />
 
 ## [1. What it does]()
-- **Face ID Attend** is an IoT-based, contact-free attendance system with face recognition.
-  - Real-time face detection & recognition
-  - Touchless **Check-In / Check-Out** with timestamps
-  - Logging to **CSV/JSON** locally or **HTTP POST** to a server
+**FaceID Attendance** is a contactless attendance system built around low-cost edge devices and a central FaceID server.
+
+- Real-time face detection & recognition
+- Touchless **Check-In / Check-Out** with timestamps
+- Logging to **CSV/JSON** locally or via **HTTP POST** to a backend
 
 -------------------------
 
 ## [2. Approaches]()
 
 ### 2.1. `Approach 1: On-device (ESP32-CAM + ESP-WHO)`
-> Folder Code: **FaceID-On-Device**
-- Detection & recognition run entirely on the ESP32-CAM.
-- Lowest cost; no network required after enrollment.
+> Ref: https://www.14core.com/esp32-s-cam-in-face-detection-and-recognition-with-esp-who-library/?utm_source=chatgpt.com
+
+- Detection & recognition run entirely on the ESP32-CAM using ESP-WHO.
+  > ESP-WHO is Espressif’s official face detection & recognition framework for ESP32. It provides optimized camera drivers, image processing, and pre-trained lightweight models (face detection, face recognition, face enrollment) that run directly on the ESP32 without an external server. Using ESP-WHO, the ESP32-CAM can capture images, detect faces, compare them with locally stored templates, and make real-time recognition decisions entirely on-device.
+
+- Lowest cost; No external server is required after enrollment.
 - Best for small classrooms/kiosks with 1–2 faces in frame.
 
-### 2.2. `Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)` => Main Approach
-> Folder Code: **FaceID-Server**
-- ESP32-CAM streams MJPEG/RTSP/HTTP frames to a local server or laptop.
-- Server performs detection/recognition (e.g., YOLO/FaceNet).
-- Scales to more users/cameras; higher accuracy and speed than on-device.
+- Requirements
+  + Board: ESP32-CAM (AI-Thinker or equivalent).
+  + Toolchain: **ESP-IDF 4.4.7** with idf.py.
+    > https://dl.espressif.com/dl/esp-idf/?idf=4.4
+  + Framework: **ESP-WHO v1.0.0**.
+    > https://github.com/espressif/esp-who.git -b v1.0.0
+  + Stable 5V supply (≥ 1A recommended). Avoid brownouts during Wi-Fi + camera.
+
+### 2.2. `Approach 2: Edge-Server (ESP32-CAM → Server/Laptop)` => Main Approach for this Repository
+Folder Backend Code: **FaceID-Server**
+
+Folder Frontend Code: **reactapp**
+
+- ESP32-CAM streams or sends images to a local server.
+- Server handles:
+  - Face detection (e.g. YOLOv8)
+  - Face embeddings
+  - Matching against stored embeddings
+  - Attendance logging (SQLite + CSV)
+- Scales to multiple cameras and higher user counts.
 
 ### 2.3. `Approach 3: Standalone Edge (Raspberry Pi 5 + Pi Camera v2)`
-> Folder Code: **FaceID-PI**
-- All processing on the Pi (detect, embed, match, log).
-- No external server required; higher performance than ESP32-only.
-- Good balance of accuracy, cost, and maintainability.
+- All processing on Raspberry Pi (detect, embed, match, log).
+- No external server required.
+- Balanced in cost, performance, and maintainability.
 
 ### 2.4. Comparison of Approaches
 
@@ -56,27 +76,27 @@
 FaceID operates in two main phases: **Enrollment** and **Recognition & Attendance**.
 
 **Phase 1 - Enrollment**
-1. **Capture:** Client captures face images (ESP32-CAM or Pi Camera).
-2. **Process:** `detect → align → embed` → produce embedding vector **`d`**.
-3. **Store:** Save `{person_id, name, d, meta}` to the face database (DB).
+  1. Capture a face image from ESP32-CAM or another client.
+  2. Run `detect → (optional) align → embed` to get embedding vector **d**.
+  3. Store `{person_id, name, embedding, metadata}` in the face database (SQLite).
 
 **Phase 2 - Recognition & Attendance**
-1. **Frame Capture:** Take a frame from the camera stream.
-2. **Per Face:** `detect → align → embed` to get query vector **`q`**.
-3. **Match:** Compare **`q`** to stored embeddings (e.g., cosine similarity).  
-   - If `score ≥ threshold` → fetch `{name, student_id}`.  
-   - Else → mark as **unknown** (optional: save for later review).
-4. **Log Event:** Write the attendance record and update **`PeopleCount`**.
+  1. Capture a frame from ESP32-CAM.
+  2. For each detected face: `detect → (optional) align → embed` → query vector **q**.
+  3. Match **q** against stored embeddings (e.g. cosine similarity):
+     - If `score ≥ threshold` → return `{name, student_id}`.
+     - Else → mark as **Unknown`** (optionally log for review).
+  4. Log the attendance event (ID, name, timestamp) to SQLite and CSV.
 
 ### 3.2. System Architecture & Data Flow 
 *(Edge-Server: ESP32-CAM → Server/Laptop)*
 
 - **ESP32-CAM** streams frames (MJPEG/RTSP/HTTP) → **FastAPI Server**.
-- **Detecting Service**: face detection + alignment → crops/landmarks.
-- **Embedding Service**: generates embeddings → **`d`** / **`q`** vectors.
+- **Detecting Service**: face detection.
+- **Embedding Service**: generates face embeddings → **`d`** / **`q`** vectors.
 - **SQLite DB**: stores embeddings and metadata; queried on match.
-- **Data Ingesting Service**: logs events to CSV/JSON and exposes HTTP endpoints.
-- **UI (optional)**: enrollment/review dashboard.
+- **Logging module**: logs events to CSV/JSON and exposes HTTP APIs endpoints.
+- **Web UI (reactapp)** → consumes APIs and displays attendance records
 
 <img width="3953" height="1586" alt="faceID" src="https://github.com/user-attachments/assets/b4ecfdf5-b6a9-43c7-8e7d-e273c98dc0ca" />
 
@@ -84,8 +104,7 @@ FaceID operates in two main phases: **Enrollment** and **Recognition & Attendanc
 
 ## [4. Getting Started]()
 
-### 4.1. Running the FastAPI Server
-
+### 4.1. Running the FastAPI Server (BE)
 The FaceID server is a FastAPI application that handles face detection, recognition, and attendance logging.
 
 **Prerequisites:**
@@ -115,8 +134,7 @@ The server will be available at `http://localhost:8000`
 - `GET /view-logs/` - View all verification logs (from all dates, sorted by timestamp)
 - `GET /view-logs/?date=YYYY-MM-DD` - View verification logs for a specific date
 
-### 4.2. Running the React Frontend
-
+### 4.2. Running the React (FE)
 The React app provides a modern interface for viewing attendance records with search and filtering capabilities.
 
 **Prerequisites:**
@@ -147,5 +165,3 @@ The app will be available at `http://localhost:5173`
 - Responsive design
 
 For detailed documentation, see [reactapp/README.md](reactapp/README.md)
-
-
