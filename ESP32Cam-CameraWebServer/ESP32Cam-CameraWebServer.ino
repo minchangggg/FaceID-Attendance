@@ -20,7 +20,7 @@ const char* password = "minchan123";
 void startCameraServer();
 // !!! Nhớ check cái này trước khi run
 // const char* fastapi_url = "http://10.127.108.169:8000/verify-face/";
-const char* fastapi_url = "http://10.99.8.169:8000/verify-face/";
+const char* fastapi_url = "http://10.34.59.169:8000/verify-face/";
 
 // Add a flag to trigger upload after web capture
 volatile bool upload_after_capture = false;
